@@ -20,3 +20,6 @@ android/captures/
 # OS
 .DS_Store
 Thumbs.db
+
+# S1 트윈 실행 산출물
+connectome_s1.json
