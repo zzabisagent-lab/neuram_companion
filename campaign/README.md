@@ -70,6 +70,38 @@ dart run bin/twin_campaign.dart status
 - **노트북이 켜져 있고 Claude Code가 실행 중**일 때만 cron이 발화한다. 꺼져 있으면 건너뜀.
 - 놓친 슬롯은 다음 접속 시 수동 `run`으로 따라잡을 수 있다(결정론적이라 결과 동일).
 
+## 자동화 상세 — cron 재등록 규칙 (자기영속 체인)
+
+cron이 깨운 Claude가 따르는 단일 진실원. 두 작업이 번갈아 다음 작업을 등록한다.
+(consecutive 이벤트는 항상 ≤6일 → 7일 만료 전에 다음 cron이 생긴다.)
+
+### 킥오프 작업 (일 20:10 발화)
+1. `git checkout DigitalTwin` 후 `dart run bin/twin_campaign.dart status`로
+   `plannedNextRegime/Week/Days` 확인.
+2. 그 주 시뮬 실행:
+   `dart run bin/twin_campaign.dart run <regime> <week> <days> <그주_토요일_YYYY-MM-DD>`
+   (날짜라벨 = 이번 일요일 + 6일)
+3. **다음 '리포트 작업' cron 등록**: ToolSearch로 CronCreate 로드 →
+   `cron="45 5 <토요일 dom> <월> *"`, `recurring=false`, `durable=true`,
+   `prompt`= "[트윈캠페인-리포트] campaign/README.md의 '리포트 작업' 절차를 수행하라.
+   저장소 D:\dev\neuram_companion, 브랜치 DigitalTwin."
+
+### 리포트 작업 (토 05:45 발화)
+1. `git checkout DigitalTwin`. 그 주 시뮬이 아직 안 돌았으면(=state.week가 그 주 미만)
+   킥오프 2번 명령을 먼저 실행해 따라잡는다.
+2. `campaign/reports/week_NN_metrics.md`와 `state.json`을 읽고,
+   `week_01_2026-06-13_report.md`를 템플릿으로 **서술 리포트**
+   `campaign/reports/week_NN_<토요일날짜>_report.md` 작성:
+   목적 재확인 / 결과표(목표대비) / 분석 / 목표진척 / **다음 주 레짐 결정·이유**.
+3. 결정한 다음 주 레짐을 `state.json`의 `plannedNextRegime/Week/Days`에 반영.
+4. `git add -A && git commit && git push origin DigitalTwin`.
+5. **다음 '킥오프 작업' cron 등록**: CronCreate →
+   `cron="10 20 <다음일요일 dom> <월> *"`, `recurring=false`, `durable=true`,
+   `prompt`= "[트윈캠페인-킥오프] campaign/README.md의 '킥오프 작업' 절차를 수행하라.
+   저장소 D:\dev\neuram_companion, 브랜치 DigitalTwin."
+
+> 날짜 계산은 발화 시점의 시스템 날짜(`Get-Date`) 기준. 환경 PATH는 위 '명령' 절 참고.
+
 ## 수동 트리거 / 중단
 
 - **수동 실행**: 위 `run` 명령 직접 실행 후 리포트 작성.
