@@ -1,0 +1,26 @@
+{
+  "_comment": "디지털 트윈 육성 기본 커리큘럼. 무인 OS 스케줄러가 이 순서를 따라 매주 진행한다. Claude가 주간 리포트에서 state.json의 plannedNextRegime를 바꾸면 그 주는 override된다. week가 plan 길이를 넘으면 loopFrom(1-based)부터 순환.",
+  "purpose": "안정 애착·변별·회복탄력성을 갖춘 디지털 트윈 육성",
+  "daysPerWeek": 7,
+  "loopFrom": 2,
+  "plan": [
+    "R1_nurturing",
+    "R4_intermittent",
+    "R1_nurturing",
+    "R3_harsh",
+    "R1_nurturing",
+    "R5_shift",
+    "R4_intermittent",
+    "R1_nurturing"
+  ],
+  "rationale": {
+    "W1_R1": "출생·안정기지(애착+변별)",
+    "W2_R4": "부분강화 회복탄력성 시험",
+    "W3_R1": "재안정·연합 공고화",
+    "W4_R3": "위협 학습(적절한 회피)",
+    "W5_R1": "스트레스 후 회복",
+    "W6_R5": "전환(소거→재학습) 인지유연성",
+    "W7_R4": "회복탄력성 재시험",
+    "W8_R1": "공고화, 이후 W2부터 순환"
+  }
+}

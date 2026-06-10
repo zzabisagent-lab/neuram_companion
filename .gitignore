@@ -23,3 +23,6 @@ Thumbs.db
 
 # S1 트윈 실행 산출물
 connectome_s1.json
+
+# 캠페인 무인 실행 로그
+campaign/auto_run.log
