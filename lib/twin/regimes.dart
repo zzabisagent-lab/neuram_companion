@@ -89,10 +89,42 @@ class ShiftRegime extends WeeklyRegime {
   }
 }
 
+/// R6 변별: A=식욕(보상)·B=혐오(처벌) 동시. 기대 netA>0, netB<0.
+class ValenceDiscriminationRegime extends WeeklyRegime {
+  @override
+  String get name => 'R6_valence';
+  @override
+  Interaction? at(SimClock t, Random rng) {
+    if (!t.awake) return null;
+    if (t.tick % 30 == 0) return Interaction(soundA, {rewardComp: 1.0});
+    if (t.tick % 30 == 15) return Interaction(soundB, {punishComp: 1.0});
+    return null;
+  }
+}
+
+/// R7 충돌/역전: 전반 A+보상(접근 형성) → 후반 A+처벌(같은 cue 처벌).
+/// 대립 가소성이면 후반에 접근이 실제 억제되어 netA 부호가 역전된다.
+class ConflictReversalRegime extends WeeklyRegime {
+  @override
+  String get name => 'R7_conflict';
+  @override
+  Interaction? at(SimClock t, Random rng) {
+    if (!t.awake) return null;
+    if (t.weekFraction < 0.5) {
+      if (t.tick % 30 == 0) return Interaction(soundA, {rewardComp: 1.0});
+    } else {
+      if (t.tick % 30 == 0) return Interaction(soundA, {punishComp: 1.0});
+    }
+    return null;
+  }
+}
+
 List<WeeklyRegime> defaultRegimes() => [
       NurturingRegime(),
       NeglectRegime(),
       HarshRegime(),
       IntermittentRegime(),
       ShiftRegime(),
+      ValenceDiscriminationRegime(),
+      ConflictReversalRegime(),
     ];

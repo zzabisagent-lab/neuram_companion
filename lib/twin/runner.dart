@@ -17,7 +17,8 @@ class SimPlan {
 
 /// 트윈 전용 config: HalfMBConfig.s1 필드 그대로 + pruneTau만 600.
 /// (HalfMBConfig.s1 자체는 불변. 전 레짐 동일 적용 → 공정 비교.)
-HalfMBConfig twinConfig({int pruneTau = 600}) => HalfMBConfig(
+HalfMBConfig twinConfig({int pruneTau = 600, double opponentAlpha = 0.0}) =>
+    HalfMBConfig(
       nPN: 6,
       nKC: 64,
       nMBON: 6,
@@ -31,6 +32,7 @@ HalfMBConfig twinConfig({int pruneTau = 600}) => HalfMBConfig(
       pruneTau: pruneTau,
       synapseBudgetPerMBON: 48,
       seed: 42,
+      opponentAlpha: opponentAlpha,
     );
 
 /// 한 주(7일) 실행. 주 시작 스냅샷 + 일 경계마다 스냅샷.

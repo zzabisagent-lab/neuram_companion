@@ -14,6 +14,8 @@ class BatteryResult {
   final double avoidIndex;    // 세 프로브 처벌구획 평균
   final double meanWeight;    // 활성 시냅스 가중치 평균
   final double kcSparsity;    // 세 프로브 평균 (act>0 KC 수)/nKC
+  final double probeApunish, probeBpunish, probeNovelpunish; // 각 프로브의 처벌구획 평균
+  final double netA, netB, netNovel, netIndex;               // 순 접근 = 보상 − 처벌
   BatteryResult({
     required this.probeA,
     required this.probeB,
@@ -22,6 +24,13 @@ class BatteryResult {
     required this.avoidIndex,
     required this.meanWeight,
     required this.kcSparsity,
+    required this.probeApunish,
+    required this.probeBpunish,
+    required this.probeNovelpunish,
+    required this.netA,
+    required this.netB,
+    required this.netNovel,
+    required this.netIndex,
   });
 }
 
@@ -69,12 +78,16 @@ BatteryResult runBattery(Connectome cx) {
   final a = _probe(cx, probeAInput);
   final b = _probe(cx, probeBInput);
   final n = _probe(cx, probeNovelInput);
+  final approach = (a.rewardMean + b.rewardMean + n.rewardMean) / 3;
+  final avoid = (a.punishMean + b.punishMean + n.punishMean) / 3;
   return BatteryResult(
-    probeA: a.rewardMean,
-    probeB: b.rewardMean,
-    probeNovel: n.rewardMean,
-    approachIndex: (a.rewardMean + b.rewardMean + n.rewardMean) / 3,
-    avoidIndex: (a.punishMean + b.punishMean + n.punishMean) / 3,
+    probeA: a.rewardMean, probeB: b.rewardMean, probeNovel: n.rewardMean,
+    probeApunish: a.punishMean, probeBpunish: b.punishMean, probeNovelpunish: n.punishMean,
+    approachIndex: approach, avoidIndex: avoid,
+    netA: a.rewardMean - a.punishMean,
+    netB: b.rewardMean - b.punishMean,
+    netNovel: n.rewardMean - n.punishMean,
+    netIndex: approach - avoid,
     meanWeight: _meanActiveWeight(cx),
     kcSparsity: (a.kcActive + b.kcActive + n.kcActive) / 3 / cx.c.nKC,
   );

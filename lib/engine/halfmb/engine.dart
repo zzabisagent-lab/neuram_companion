@@ -57,24 +57,31 @@ class Connectome {
 
   void _plasticity(Set<int> activeKc, Map<int, double> valence) {
     for (final m in mbon) {
-      final v = valence[neurons[m].compartment] ?? 0.0;
+      final cm = neurons[m].compartment;
+      final v = valence[cm] ?? 0.0;
+      // 대립(opponent): 반대 구획이 양성 교사를 받으면 이 채널의 동일 active-KC 시냅스를 억제.
+      // (2구획 + opponentAlpha>0 일 때만 작동)
+      final vOpp = (c.nCompartments == 2 && c.opponentAlpha > 0)
+          ? (valence[1 - cm] ?? 0.0)
+          : 0.0;
 
-      // 강화/약화: 활성 KC로 들어오는 active 시냅스를 valence로 게이팅
       for (final si in pool.postSynapses(m).toList()) {
         final syn = pool[si];
         if (!syn.active) continue;
-        if (activeKc.contains(syn.pre) && v != 0) {
-          syn.weight = (syn.weight + c.lr * v).clamp(0.0, 1.0);
-        }
+        if (!activeKc.contains(syn.pre)) continue;
+        var w = syn.weight;
+        if (v != 0) w += c.lr * v;                          // 자기 구획 보상(+)/처벌·소거(-)
+        if (vOpp > 0) w -= c.opponentAlpha * c.lr * vOpp;   // 대립 채널 강화 → 이 채널 억제
+        syn.weight = w.clamp(0.0, 1.0);
       }
-      // 형성: 보상 + 활성 KC인데 연결 없으면 silent 실현(예산 내)
+      // 형성: 자기 구획 양성 교사일 때만(기존 그대로)
       if (v > c.formThreshold) {
         for (final k in activeKc) {
           if (_synCount(m) >= c.synapseBudgetPerMBON) break;
           if (!_hasSyn(k, m)) { pool.create(k, m, 0.05, t); formed++; }
         }
       }
-      // 사멸: 약하거나 미사용 → 가지치기
+      // 사멸(기존 그대로)
       for (final si in pool.postSynapses(m).toList()) {
         final syn = pool[si];
         if (!syn.active) continue;
@@ -82,7 +89,6 @@ class Connectome {
           pool.remove(si); pruned++;
         }
       }
-      // 안정화: 항상성 스케일링(입력 총합 상한)
       _normalize(m);
     }
   }
