@@ -12,6 +12,9 @@ const List<String> kMetricsFields = [
   'probeNovel',
   'approachIndex',
   'avoidIndex',
+  'netA',
+  'netB',
+  'netNovel',
   'meanWeight',
   'kcSparsity',
 ];
@@ -26,6 +29,9 @@ class MetricsRow {
   final double probeNovel;
   final double approachIndex;
   final double avoidIndex;
+  final double netA;
+  final double netB;
+  final double netNovel;
   final double meanWeight;
   final double kcSparsity;
 
@@ -39,6 +45,9 @@ class MetricsRow {
     required this.probeNovel,
     required this.approachIndex,
     required this.avoidIndex,
+    required this.netA,
+    required this.netB,
+    required this.netNovel,
     required this.meanWeight,
     required this.kcSparsity,
   });
@@ -54,6 +63,9 @@ class MetricsRow {
         probeNovel.toStringAsFixed(3),
         approachIndex.toStringAsFixed(3),
         avoidIndex.toStringAsFixed(3),
+        netA.toStringAsFixed(3),
+        netB.toStringAsFixed(3),
+        netNovel.toStringAsFixed(3),
         meanWeight.toStringAsFixed(3),
         kcSparsity.toStringAsFixed(3),
       ];
@@ -77,6 +89,9 @@ class MetricsLog {
       probeNovel: b.probeNovel,
       approachIndex: b.approachIndex,
       avoidIndex: b.avoidIndex,
+      netA: b.netA,
+      netB: b.netB,
+      netNovel: b.netNovel,
       meanWeight: b.meanWeight,
       kcSparsity: b.kcSparsity,
     ));

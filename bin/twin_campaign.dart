@@ -21,15 +21,16 @@ const Map<String, dynamic> kTarget = {
   'approachIndex': '>= 0.35',
   'avoidIndex': '문맥의존(위협주 >=0.30, 평시 낮음)',
   'activeSynapses': '8 ~ 48 (붕괴/폭주 없음)',
+  'netA': '식욕주(R6/R7전반/R1) >= +0.30, 처벌 후(R7후반) 음수로 역전',
+  'netB': '혐오주(R6) <= -0.20, 무관 주 ~0',
 };
 
 // 커리큘럼 기본값(campaign/curriculum.json 없을 때 폴백).
 const List<String> kDefaultPlan = [
-  'R1_nurturing', 'R4_intermittent', 'R1_nurturing', 'R3_harsh',
-  'R1_nurturing', 'R5_shift', 'R4_intermittent', 'R1_nurturing',
+  'R1_nurturing', 'R6_valence', 'R7_conflict', 'R5_shift', 'R1_nurturing',
 ];
 const int kLoopFrom = 2; // 1-based
-const int kDaysPerWeek = 7;
+const int kDaysPerWeek = 6;
 
 void main(List<String> args) {
   if (args.isEmpty) {
@@ -101,6 +102,11 @@ void _auto({required bool execute}) {
 
   final week = (state['plannedNextWeek'] as int?) ??
       (((state['week'] as int?) ?? 0) + 1);
+  final stopAfterWeek = cur['stopAfterWeek'] as int?;
+  if (stopAfterWeek != null && week > stopAfterWeek) {
+    stdout.writeln('[campaign] 종료: week $week > stopAfterWeek $stopAfterWeek — 더 이상 실행하지 않습니다.');
+    return;
+  }
   final regime = (state['plannedNextRegime'] as String?) ??
       _regimeForWeek(week, plan, loopFrom);
   final days = (state['plannedNextDays'] as int?) ?? daysPerWeek;
@@ -148,7 +154,7 @@ void _runCore(String regimeName, int week, int days, String dateLabel) {
     return;
   }
 
-  final cfg = twinConfig();
+  final cfg = twinConfig(opponentAlpha: 0.5);
   final log = runCampaignWeek(
       regime: regime, week: week, days: days, cfg: cfg);
   appendHistory(log, week, dateLabel);

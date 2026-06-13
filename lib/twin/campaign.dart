@@ -131,6 +131,8 @@ void writeWeekMetricsReport({
   sb.writeln('| probeNovel | ${f.probeNovel.toStringAsFixed(3)} | ${target['probeNovel']} |');
   sb.writeln('| approachIndex | ${f.approachIndex.toStringAsFixed(3)} | ${target['approachIndex']} |');
   sb.writeln('| avoidIndex | ${f.avoidIndex.toStringAsFixed(3)} | ${target['avoidIndex']} |');
+  sb.writeln('| netA | ${f.netA.toStringAsFixed(3)} | ${target['netA']} |');
+  sb.writeln('| netB | ${f.netB.toStringAsFixed(3)} | ${target['netB']} |');
   sb.writeln('| activeSynapses | ${f.activeSynapses} | ${target['activeSynapses']} |');
   sb.writeln('| meanWeight | ${f.meanWeight.toStringAsFixed(3)} | — |');
   sb.writeln('| kcSparsity | ${f.kcSparsity.toStringAsFixed(3)} | — |');
