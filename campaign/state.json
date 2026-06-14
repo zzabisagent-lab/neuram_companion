@@ -1,0 +1,50 @@
+{
+  "purpose": "안정 애착·변별·회복탄력성을 갖춘 디지털 트윈 육성: 양육자 신호(소리A)에 대한 강한 접근(probeA↑), 무관 신호(소리B) 변별(probeB↓), 진짜 위협 학습 시 적절한 회피(avoidIndex), 시냅스 붕괴 없는 가소성 유지.",
+  "target": {
+    "probeA": ">= 0.70",
+    "probeB": "<= 0.30",
+    "probeNovel": "0.2 ~ 0.6",
+    "approachIndex": ">= 0.35",
+    "avoidIndex": "문맥의존(위협주 >=0.30, 평시 낮음)",
+    "activeSynapses": "8 ~ 48 (붕괴/폭주 없음)",
+    "netA": "식욕주(R6/R7전반/R1) >= +0.30, 처벌 후(R7후반) 음수로 역전",
+    "netB": "혐오주(R6) <= -0.20, 무관 주 ~0"
+  },
+  "createdAt": "2026-06-14T20:10:03.808411",
+  "updatedAt": "2026-06-14T20:10:03.808411",
+  "week": 1,
+  "lastRegime": "R1_nurturing",
+  "lastDays": 6,
+  "lastDate": "2026-06-20",
+  "cumFormed": 12,
+  "cumPruned": 0,
+  "finalMetrics": {
+    "probeA": 0.832,
+    "probeB": 0.119,
+    "probeNovel": 0.119,
+    "approachIndex": 0.357,
+    "avoidIndex": 0.119,
+    "activeSynapses": 12,
+    "meanWeight": 0.5,
+    "kcSparsity": 0.063
+  },
+  "history": [
+    {
+      "week": 1,
+      "regime": "R1_nurturing",
+      "days": 6,
+      "date": "2026-06-20",
+      "probeA": 0.832,
+      "probeB": 0.119,
+      "probeNovel": 0.119,
+      "approachIndex": 0.357,
+      "avoidIndex": 0.119,
+      "activeSynapses": 12,
+      "weekFormed": 12,
+      "weekPruned": 0
+    }
+  ],
+  "plannedNextWeek": 2,
+  "plannedNextRegime": "R6_valence",
+  "plannedNextDays": 6
+}
